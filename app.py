@@ -1,22 +1,25 @@
 import streamlit as st
-import pandas as pd
+import pickle
 import numpy as np
 
-st.title("🩺 Diabetes Classification App")
+# تحميل الموديل
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-st.write("Enter patient data to predict diabetes. (Demo version)")
+st.title("🧠 Decision Tree Classifier")
+st.write("تجربة نموذج التصنيف المدرب")
 
-# Example inputs
-pregnancies = st.number_input("Pregnancies", 0, 20, 1)
-glucose = st.number_input("Glucose", 0, 200, 100)
-bp = st.number_input("Blood Pressure", 0, 150, 70)
-skin = st.number_input("Skin Thickness", 0, 100, 20)
-insulin = st.number_input("Insulin", 0, 900, 80)
-bmi = st.number_input("BMI", 0.0, 70.0, 25.0)
-dpf = st.number_input("Diabetes Pedigree Function", 0.0, 3.0, 0.5)
-age = st.number_input("Age", 1, 120, 30)
+# إدخال الخصائص من المستخدم
+st.sidebar.header("ادخل البيانات:")
 
-# Fake prediction (replace with trained model later)
-if st.button("Predict"):
-    result = np.random.choice(["Diabetic", "Not Diabetic"])
-    st.success(f"Prediction: {result}")
+# مثال: لو عندك 4 فيتشرز زي iris dataset
+feature1 = st.sidebar.number_input("Feature 1", value=0.0)
+feature2 = st.sidebar.number_input("Feature 2", value=0.0)
+feature3 = st.sidebar.number_input("Feature 3", value=0.0)
+feature4 = st.sidebar.number_input("Feature 4", value=0.0)
+
+features = np.array([[feature1, feature2, feature3, feature4]])
+
+if st.button("تنبؤ"):
+    prediction = model.predict(features)
+    st.success(f"🎯 النتيجة: {prediction[0]}")
